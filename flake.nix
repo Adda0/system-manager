@@ -2,9 +2,14 @@
   description = "Manage system config using nix on any distro";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.userborn.url = "github:JulienMalka/userborn/stateful-users";
 
   outputs =
-    { self, nixpkgs }:
+    {
+      self,
+      nixpkgs,
+      userborn,
+    }:
     let
       systems = [
         "aarch64-linux"
@@ -77,6 +82,7 @@
               (import ./test/nix/modules {
                 inherit system;
                 inherit (nixpkgs) lib;
+                userborn = userborn.packages.${system}.default;
                 nix-vm-test = import nix-vm-test-lib {
                   inherit nixpkgs;
                   inherit system;
